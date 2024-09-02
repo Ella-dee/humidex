@@ -1,0 +1,69 @@
+<div class="container text-center">
+  <div class="title mt-2">
+    <h1> My <span>Humidex</span></h1>
+    <div [style.display]="infoRead ? 'none' : 'block'"  class="alert alert-info alert-dismissible fade show" role="alert">
+      <strong>Explications:</strong> L'humidex est un indice qui intégre les effets combinés de la chaleur et de l'humidité.<br/>
+      Une température de 30° est moins supportable lorsque l'humidité de l'air est forte (sensation de lourdeur) que lorsque l'air est sec.<br/>
+      L'humidex dépend donc de la température sous abri et de l'humidité relative.<br/>
+      A partir d'un humidex de 40, on ressent "beaucoup d'inconfort", au dessus de 45 il y a "danger" et au dessus de 54 un coup de chaleur est imminent.
+        <button  (click)="dismiss()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>    
+  </div>
+  
+  <div class="card formInput mb-3 mt-3" [style.display]="isVisible ? 'block' : 'none'">
+    <div class="card-header">
+      <h4>Humidex</h4>
+    </div>
+    <form class="card-body" name="zipCodeForm" [style.display]="isVisible ? 'block' : 'none'"  (ngSubmit)="zipCodeForm.valid && onSubmit(zipCodeForm.value)" #zipCodeForm="ngForm" novalidate>
+      <div class="form-row ">
+        <div class="form-group">
+          <label for="inputUserZipCode">Saisir une ville ou un code postal<br/>(en France)</label>
+          <input type="text" class="form-control text-center" required placeholder="29340 ou Coat-Lescoat" id="zipCodeInput" name="inputUserZipCode" (ngModel)="inputUserZipCode"  >
+        </div>
+      </div>
+      <div class="btn-box mb-1">
+        <button type="submit" class="btn btn-primary px-4 ">Calculer</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-warning" *ngIf="zipCodeForm.submitted && !isSuccessful">
+    Echec de la recherche de la ville<br />{{ errorMessage }}
+  </div>
+  <!-- End of Error Message -->
+
+  <!-- City infos -->
+  <div class="card city mt-3 mb-3" *ngIf="isSuccessful">
+    <div class="card-header">
+      <p class="font-weight-bold">{{city.label}}</p> 
+      <p class="card-subtitle mb-1 text-muted">Température ressentie: {{apparentTemp}}C°</p>
+    </div>
+    <div class="card-body" [ngClass]="humClass">
+      <p class="lead font-weight-bold">Humidex: {{humidex | number : '1.2-2'}}</p>
+    </div>
+    <div class="btn-box mb-1">
+      <button type="submit" class="btn btn-primary px-4 mb-3" (click)="onBack()">Recommencer</button>
+    </div>
+  </div>
+  <!-- End of City Info-->
+
+  <!-- Légende -->
+  <div class="legende mb-4" >
+    <button (click)="toggleLegend()"  class="btn btn-info px-4 mb-3">{{dropdownText}}</button>
+    <div id="myDropdown" class="dropdown-content" [style.display]="showLegend ? 'block' : 'none'">
+      <ul>
+        <li class="hum1">-30<br/>sensation de bien-être</li>
+        <li class="hum2">30-35<br/>petit inconfort</li>
+        <li class="hum3">35-40<br/>certain inconfort</li>
+        <li class="hum4">40-45<br/>beaucoup d'inconfort, évitez les efforts</li>
+        <li class="hum5">45-54<br/>danger</li>
+        <li class="hum6">+54<br/>coup de chaleur imminent</li>
+      </ul>
+    </div>
+  </div>
+  <!-- End of Légende-->        
+            
+</div> 
